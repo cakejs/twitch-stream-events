@@ -1,0 +1,15 @@
+{
+    "Token": "Bearer YOUR_TOKEN_HERE",
+    "Callback": "https://example.com/your/callback/url",
+    "CallbackSecret": "something_random_here",
+    "Event": {
+        "BroadcasterId": user_id_number
+    }
+    "LeaseSeconds": 864000,
+    "LeaseRenewalInterval": 777600,
+    "ListenPort": 8443,
+    "ListenHost": "127.0.0.1",
+    "ListenAutoStart": true,
+    "SocketAddr": "127.0.0.1",
+    "SocketPort": 8080
+}
