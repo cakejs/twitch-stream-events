@@ -1,6 +1,6 @@
 # Twitch Stream Events Pipeline
 
-A small webhook pipeline for title, category and online status changes. These are passed to a socket.io instance for other applications to consume through callbacks
+A small webhook pipeline for title, category and online status changes. These are passed to a socket.io instance for other applications to consume through callbacks.
 
 ![console output](log.png)
 
@@ -33,7 +33,7 @@ After running `npm i`, `index.js` will need to be updated/copied in again.
 
 ### Webhook delivery time
 
-Webhook callbacks from Twitch (for events) can be delayed for approximately 2+ minutes from when an event change happens at certain times (min: ~15s, avg: 1 min, max: 2m30s)
+Webhook callbacks from Twitch (for events) can be delayed for approximately 2+ minutes from when an event change happens at certain times (measurements - min: ~15s, avg: 1m, max: 2m30s).
 
 ### Configuration (settings.json)
 
