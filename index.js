@@ -19,6 +19,8 @@
  * - After clicking 'Accept', the redirect will likely end up being http://localhost
  * - Grab the bearer token in the URL parameters after clicking through the 'login' + 'authorization allowed' 
  *   redirect and add this to ./settings.json under the `"Token":` field.
+ * Client ID;
+ * - curl -H 'Authorization: Bearer <bearer token>' -X GET 'https://api.twitch.tv/helix/users?login=<client id>'
  */
 
 const TwitchWebhook = require('twitch-webhook')
@@ -47,10 +49,25 @@ if(!config.LeaseRenewalInterval) {
 }
 
 function subscribeStreamEvent() {
-    console.log(gradient.retro(`[+] Webhook update: 'streams' [exp: ${config.LeaseSeconds}s | renews: ${config.LeaseRenewalInterval}s]`))
+    //console.log(gradient.retro(`[+] Webhook update: 'streams' [exp: ${config.LeaseSeconds}s | renews: ${config.LeaseRenewalInterval}s]`))
     twitchWebhook.subscribe('streams', {
         user_id: config.Event.BroadcasterId
     })
+}
+
+function getVodTime(vodStartTime) {
+    let utcDeltaMiliSeconds = Date.now() - Date.parse(vodStartTime);
+    let seconds = Math.floor(utcDeltaMiliSeconds / 1000) % 60;
+    let minutes = Math.floor(utcDeltaMiliSeconds / 1000 / 60) % 60;
+    let hours = Math.floor(utcDeltaMiliSeconds / 1000 / 60 / 60) % 24;
+
+    //console.log(gradient.retro(`VOD time: " + ('0' + hours).slice(-2) + "h" + ('0' + minutes).slice(-2) + "m" + ('0' + seconds).slice(-2) + "s"`));
+
+    return {
+        hours: ('0' + hours).slice(-2) + "h",
+        minutes: ('0' + minutes).slice(-2) + "m",
+        seconds: ('0' + seconds).slice(-2) + "s"
+    }
 }
 
 const twitchWebhook = new TwitchWebhook({
@@ -72,10 +89,10 @@ twitchWebhook.on('streams', ({ event}) => {
         let ev = sEvent.data[e]
 
         if(currentState.started_at !== ev.started_at) {
-            console.log(gradient.retro(`[~] New stream started at: ${ev.started_at}`))
+            console.log(gradient.retro(`[~] Stream started at: ${ev.started_at}`))
             console.log(gradient.retro(`[~] Category/Game ID: ${ev.game_id}`))
             console.log(gradient.retro(`[~] Title: ${ev.title}`))
-
+	    
 	    io.emit('new_stream', ev.started_at)
 
             currentState.started_at = ev.started_at
@@ -89,6 +106,9 @@ twitchWebhook.on('streams', ({ event}) => {
 	    io.emit('category_change', ev.game_id)
 
             currentState.game_id = ev.game_id
+
+            vodTime = getVodTime(ev.started_at)
+	    console.log(gradient.retro(`[~] VOD mark: ${vodTime.hours}${vodTime.minutes}${vodTime.seconds}`))
         }
   
         if(currentState.title !== ev.title) {
@@ -97,6 +117,9 @@ twitchWebhook.on('streams', ({ event}) => {
 	    io.emit('title_change', ev.title)
 
             currentState.title = ev.title
+
+            vodTime = getVodTime(ev.started_at)
+	    console.log(gradient.retro(`[~] VOD mark: ${vodTime.hours}${vodTime.minutes}${vodTime.seconds}`))
         }
  	
 	console.log(gradient.retro("---"))
