@@ -1,0 +1,19 @@
+{
+  "name": "twitch-stream-events",
+  "version": "1.0.0",
+  "description": "A small webhook pipeline for title, category and online status changes. These are passed to a socket.io instance for other applications to consume through callbacks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cakejs/twitch-stream-events.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cakejs/twitch-stream-events/issues"
+  },
+  "homepage": "https://github.com/cakejs/twitch-stream-events#readme"
+}
