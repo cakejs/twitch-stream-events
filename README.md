@@ -4,13 +4,6 @@ A small webhook pipeline for title, category and online status changes. These ar
 
 ![console output](log.png)
 
-# Important (temporary workaround)
-
-A Bearer token is required. [This pull](https://github.com/true-dubach/node-twitch-webhook/pull/15), 
-or `twitch-webhook-modified-index.js` can be swapped with twitch-webhook's `index.js` in `node_modules` to allow token use.
-
-After running `npm i`, `index.js` will need to be updated/copied in again.
-
 # Libraries
 
 * `twitch-webhook` (modified)
