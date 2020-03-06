@@ -12,8 +12,10 @@
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/cakejs/twitch-stream-events/issues"
-  },
-  "homepage": "https://github.com/cakejs/twitch-stream-events#readme"
+  "dependencies": {
+    "gradient-string": "^1.2.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "twitch-webhook": "https://github.com/cakejs/node-twitch-webhook"
+  }
 }
