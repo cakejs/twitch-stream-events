@@ -85,6 +85,15 @@ const twitchWebhook = new TwitchWebhook({
 twitchWebhook.on('streams', ({ event}) => {
     let sEvent = JSON.parse(JSON.stringify(event))
 
+    if(currentState.started_at != "" && (sEvent.data && sEvent.data.length == 0))  {
+      vodTime = getVodTime(currentState.started_at);
+      offlineAt = new Date().toISOString();
+      console.log(gradient.retro(`[~] Stream went offline at ${offlineAt}. Up for: ${vodTime.hours}${vodTime.minutes}${vodTime.seconds}`));
+      io.emit('stream_offline', new Date().toISOString());
+      io.emit('stream_uptime', `${vodTime.hours}${vodTime.minutes}${vodTime.seconds}`);
+      currentState.started_at = "";
+    }
+
     for (e in sEvent.data) {
         let ev = sEvent.data[e]
 
