@@ -55,6 +55,13 @@ function subscribeStreamEvent() {
     })
 }
 
+function subscribeFollowEvent() {
+    twitchWebhook.subscribe('users/follows', {
+        to_id: config.Event.BroadcasterId,
+        first: 1
+    }) 
+}
+
 function getVodTime(vodStartTime) {
     let utcDeltaMiliSeconds = Date.now() - Date.parse(vodStartTime);
     let seconds = Math.floor(utcDeltaMiliSeconds / 1000) % 60;
@@ -82,7 +89,18 @@ const twitchWebhook = new TwitchWebhook({
     }
 })
 
-twitchWebhook.on('streams', ({ event}) => {
+twitchWebhook.on('users/follows', ({ event }) => {
+  let follower = JSON.parse(JSON.stringify(event));
+  if(follower.data && follower.data.length > 0) {
+    let f = follower.data.shift();
+    console.log(gradient.retro(`[+] New follow: ${f.from_name} (id: ${f.from_id}) at ${f.followed_at}`));
+    io.emit('new_follower_id', f.from_id);
+    io.emit('new_follower_name', f.from_name);
+    io.emit('new_follower_at', f.followed_at);
+  }
+})
+
+twitchWebhook.on('streams', ({ event }) => {
     let sEvent = JSON.parse(JSON.stringify(event))
 
     if(currentState.started_at != "" && (sEvent.data && sEvent.data.length == 0))  {
@@ -145,7 +163,8 @@ twitchWebhook.on('streams', ({ event}) => {
  *
  */
 
-setInterval(subscribeStreamEvent, config.LeaseRenewalInterval * 1000)
+setInterval(subscribeStreamEvent, config.LeaseRenewalInterval * 1000);
+setInterval(subscribeFollowEvent, config.LeaseRenewalInterval * 1000);
 
 process.on('SIGINT', () => {
     twitchWebhook.unsubscribe('*')
@@ -158,4 +177,5 @@ console.log(gradient.retro.multiline([
     `[+] A socket.io server is listening on ${ADDR}:${PORT}`,
 ].join('\n')))
 
-subscribeStreamEvent()
+subscribeStreamEvent();
+subscribeFollowEvent();
