@@ -10,3 +10,4 @@ dist/
 .cargo-ok
 *.swp
 settings.json
+settings.json*
