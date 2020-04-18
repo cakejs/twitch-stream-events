@@ -78,6 +78,7 @@ function getVodTime(vodStartTime) {
 }
 
 const twitchWebhook = new TwitchWebhook({
+    client_id: config.Client_ID,
     token: config.Token,
     callback: config.Callback,
     secret: config.CallbackSecret,
