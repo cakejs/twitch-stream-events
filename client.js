@@ -11,3 +11,11 @@ io.on('title_change', function(msg) {
 io.on('category_change', function(msg) {
     console.log('category has changed to', msg)
 })
+
+io.on('stream_uptime', function(msg) {
+    console.log('stream up for', msg)
+})
+
+io.on('stream_offline', function(msg) {
+    console.log('stream went offline at', msg)
+})
